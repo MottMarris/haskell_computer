@@ -1,0 +1,130 @@
+exec (acomp a) (0,s,[]) == (length (acomp a), s, [aval a s])
+
+Proof:
+--TODO Task 4
+
+case: a = (N x), s = fromList[(a, z)]
+
+
+exec (acomp (N x)) (0, fromList[(a, z)], [])
+
+Proof 1.1
+By definition of acomp -> acomp (N x) = [LOADI x]
+By definition of length -> length [LOADI x] = 1
+Therefore -> length (acomp (N x)) = 1
+
+Proof 1.2
+By definition of aval -> aval (N x) (fromList[(a, z)]) = x
+
+
+[applying acomp] = exec [LOADI x] (0, fromList[(a, z)], [])
+[applying exec] = exec [] (iexec (LOADI x) (0, fromList[(a, z)], [])
+[applying exec] = (iexec (LOADI x) (0, fromList[(a, z)], [])
+[applying iexec] = (0 + 1, fromList[(a, z)], [x])
+[proof 1.1 stated above] = (0 + length (acomp (N x)), fromList[(a, z)], [x])
+[proof 1.2 stated above] = (length (acomp (N x)), fromList[(a, z)], [aval (N x) (fromList[(a, z)])])
+
+(length (acomp a), s, [aval a s])
+
+-------------------------------------------------------------------------------------
+
+case: a = (V a), s = fromList[(a, z)]
+
+
+exec (acomp (V a)) (0, fromList[(a, z)], [])
+
+Proof 2.1
+By definition of acomp -> acomp (V a) = [LOAD a]
+By definition of length -> length [LOAD a] = 1
+Therefore -> length (acomp (V a)) = 1
+
+Proof 2.2
+By definition of aval -> aval (V a) (fromList[(a, z)]) = z
+
+
+[applying acomp] = exec [LOAD a] (0, fromList[(a, z)], [])
+[applying exec] = exec [] (iexec (LOAD a) (0, fromList[(a, z)], [])
+[applying exec] = (iexec (LOAD a) (0, fromList[(a, z)], [])
+[applying iexec] = (0 + 1, fromList[(a, z)], [z])
+[proof 1.1 stated above] = (0 + length (acomp (V a)), fromList[(a, z)], [z])
+[proof 1.2 stated above] = (length (acomp (V a)), fromList[(a, z)], [aval (V a) (fromList[(a, z)])])
+
+(length (acomp a), s, [aval a s])
+
+-------------------------------------------------------------------------------------
+
+case: a = Plus (N x) (N y), s = fromList[(a, z)]
+
+exec (acomp (Plus (N x) (N y))) (0, fromList[(a, z)], [])
+
+By law of commutativity Plus (N x) (N y) == Plus (N y) (N x)
+
+Proof 3.1
+By definition of acomp -> acomp (Plus (N x) (N y)) = [LOADI x, LOADI y, ADD]
+By definition of length -> [LOADI x, LOADI y, ADD] = 3
+Therefore -> length (acomp (Plus (N x) (N y))) = 3
+
+Proof 3.2
+By definition of aval -> aval (Plus (N x) (N y)) (fromList[(a, z)]) = x+y
+
+[applying acomp] = exec [LOADI x, LOADI y, ADD] (0, fromList[(a, z)], [])
+[applying exec] = exec [LOADI y, ADD] (0 + 1, fromList[(a, z)], [x])
+[applying exec] = exec [ADD] (0 + 2, fromList[(a, z)], [y,x])
+[applying exec] = exec [] (0 + 3, fromList[(a, z)], [y+x])
+[proof 2.1 stated above] = (0 + (acomp (Plus (N x) (N y))), fromList[(a, z)], [y+x])
+[proof 2.2 stated above] = (length (acomp (Plus (N x) (N y))), fromList[(a, z)], [aval (Plus (N x) (N y)) (fromList[(a, z)])])
+
+(length (acomp a), s, [aval a s])
+
+-------------------------------------------------------------------------------------
+
+case: a = Plus (V a) (V a), s = fromList[(a, z)]
+
+exec (acomp (Plus (V a) (V a))) (0, fromList[(a, z)], [])
+
+Proof 4.1
+By definition of acomp -> acomp (Plus (V a) (V a)) = [LOAD a, LOAD a, ADD]
+By definition of length -> [LOAD a, LOAD a, ADD] = 3
+Therefore -> length (acomp (Plus (V a) (V a))) = 3
+
+Proof 4.2
+By definition of aval -> aval (Plus (V a) (V a)) (fromList[(a, z)]) = z+z
+
+[applying acomp] = exec [LOAD a, LOAD a, ADD] (0, fromList[(a, z)], [])
+[applying exec] = exec [LOAD a, ADD] (0 + 1, fromList[(a, z)], [z])
+[applying exec] = exec [ADD] (0 + 2, fromList[(a, z)], [z,z])
+[applying exec] = exec [] (0 + 3, fromList[(a, z)], [z+z])
+[proof 2.1 stated above] = (0 + (acomp (Plus (V a) (V a))), fromList[(a, z)], [z+z])
+[proof 2.2 stated above] = (length (acomp (Plus (V a) (V a))), fromList[(a, z)], [aval (Plus (V a) (V a)) (fromList[(a, z)])])
+
+(length (acomp a), s, [aval a s])
+
+-------------------------------------------------------------------------------------
+
+case: a = Plus (N x) (V a), s = fromList[(a, z)]
+
+exec (acomp (Plus (N x) (V a))) (0, fromList[(a, z)], [])
+
+By law of commutativity Plus (N x) (V a) == Plus (V a) (N x)
+
+Proof 5.1
+By definition of acomp -> acomp (Plus (N x) (V a)) = [LOADI x, LOAD a, ADD]
+By definition of length -> [LOADI x, LOADI a, ADD] = 3
+Therefore -> length (acomp (Plus (N x) (V a))) = 3
+
+Proof 5.2
+By definition of aval -> aval (Plus (N x) (V a)) (fromList[(a, z)]) = x+z
+
+[applying acomp] = exec [LOADI x, LOAD a, ADD] (0, fromList[(a, z)], [])
+[applying exec] = exec [LOAD a, ADD] (0 + 1, fromList[(a, z)], [x])
+[applying exec] = exec [ADD] (0 + 2, fromList[(a, z)], [z,x])
+[applying exec] = exec [] (0 + 3, fromList[(a, z)], [z+x])
+[proof 2.1 stated above] = (0 + (acomp (Plus (N x) (V a))), fromList[(a, z)], [z+x])
+[proof 2.2 stated above] = (length (acomp (Plus (N x) (V a))), fromList[(a, z)], [aval (Plus (N x) (V a)) (fromList[(a, z)])])
+
+(length (acomp a), s, [aval a s])
+
+
+-------------------------------------------------------------------------------------
+
+
